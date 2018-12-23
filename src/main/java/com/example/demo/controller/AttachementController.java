@@ -56,7 +56,7 @@ public class AttachementController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Map<String, String> handleException(DataNotFoundException ex) {
 
-		//戻しコミット用コメント
+		//戻しコミットします
 		logger.warn("handlerException", ex);
 		Map<String, String> body = Collections.singletonMap("exeption'reason", "data not found");
 		return body;
