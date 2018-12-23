@@ -11,5 +11,9 @@ public class DataNotFoundException extends BusinessException {
 		super(message);
 	}
 
+	public DataNotFoundException(String message, Throwable throwable) {
+		super(message,throwable);
+	}
+
 
 }
