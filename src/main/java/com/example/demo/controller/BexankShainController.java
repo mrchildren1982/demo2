@@ -1,27 +1,27 @@
 package com.example.demo.controller;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.entity.BexankShain;
 import com.example.demo.domain.service.BexankShainService;
 import com.example.demo.exception.BusinessException;
-import com.example.demo.exception.DataNotFoundException;
 
 @RestController
 @RequestMapping("/bexankShain")
@@ -42,7 +42,6 @@ public class BexankShainController {
 
 		return bexankShain;
 	}
-
 
 	@RequestMapping(method = RequestMethod.GET)
 	public List<BexankShain> getAllShains() {
@@ -76,17 +75,14 @@ public class BexankShainController {
 		service.deleteById(id);
 	}
 
-	@ExceptionHandler(DataNotFoundException.class)
-	public ResponseEntity<?> handlerException(DataNotFoundException ex) {
+	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	@ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
+	@ResponseBody
+	public Map<String, Object> handleError() {
 
-		logger.warn("handlerException", ex);
-
-		Map<String, String> body = Collections.singletonMap("message", "invalid");
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("example", "zzz");
-
-		HttpStatus status = HttpStatus.BAD_REQUEST;
-		return new ResponseEntity<>(body, headers, status);
+		Map<String, Object> errMap = new HashMap<>();
+		errMap.put("message", "許可されないメソッド");
+		errMap.put("status", HttpStatus.METHOD_NOT_ALLOWED);
+		return errMap;
 	}
 }
