@@ -2,9 +2,13 @@ package com.example.demo.domain.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,20 +19,33 @@ import com.example.demo.domain.entity.Child;
 import com.example.demo.domain.entity.Parent;
 import com.example.demo.domain.repository.ChildRepository;
 import com.example.demo.domain.repository.ParentRepository;
+import com.example.demo.exception.BusinessException;
+import com.example.demo.exception.DataNotFoundException;
 
 @Transactional
 @Service
 public class FamilyService {
 
 	@Autowired
+	private static Logger logger = LoggerFactory.getLogger(FamilyService.class);
+
+	@Autowired
+	private MessageSource messageSource;
+	@Autowired
 	private ParentRepository parentRepository;
 
 	@Autowired
 	private ChildRepository childRepository;
 
-	public List<FamilyDto> getFamilyData() {
+	public List<FamilyDto> getFamilyData() throws BusinessException{
 
 		List<Parent> parents = parentRepository.findAll();
+
+		if (parents == null  || parents.size() == 0) {
+			String message =messageSource.getMessage("data_not_found",null , Locale.JAPAN);
+			logger.debug(message);
+			throw new DataNotFoundException(message);
+		}
 		List<Child> childrens = childRepository.findAll();
 
 		List<FamilyDto> familys = new ArrayList<>();

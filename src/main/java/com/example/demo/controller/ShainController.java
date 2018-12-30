@@ -22,8 +22,6 @@ import com.example.demo.domain.entity.Shain;
 import com.example.demo.domain.service.ShainService;
 import com.example.demo.exception.DataNotFoundException;
 
-
-
 @RestController
 @RequestMapping("/shain")
 public class ShainController {
@@ -39,14 +37,14 @@ public class ShainController {
 		return service.findAll();
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value="{id}")
-	public Shain getShain(@PathVariable("id")Long id) {
+	@RequestMapping(method = RequestMethod.GET, value = "{id}")
+	public Shain getShain(@PathVariable("id") Long id) {
 		return service.find(id);
 
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value= "{id}")
-	public Shain updateShain(@PathVariable Long id,@RequestBody Shain shain) {
+	@RequestMapping(method = RequestMethod.PUT, value = "{id}")
+	public Shain updateShain(@PathVariable Long id, @RequestBody Shain shain) {
 
 		shain.setId(id);
 		return service.update(shain);
@@ -57,7 +55,7 @@ public class ShainController {
 		return service.insertShain(shain);
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value="{id}")
+	@RequestMapping(method = RequestMethod.DELETE, value = "{id}")
 	public void delete(@PathVariable Long id) {
 
 		service.delete(id);
@@ -70,8 +68,8 @@ public class ShainController {
 
 		Map<String, Object> body = Collections.singletonMap("message", "invalid");
 
-		HttpHeaders headers  = new HttpHeaders();
-		headers.add("example","zzz");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("example", "zzz");
 
 		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 		return new ResponseEntity<>(body, headers, httpStatus);
