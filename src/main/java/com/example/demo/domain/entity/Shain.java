@@ -3,11 +3,13 @@ package com.example.demo.domain.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.Data;
 
 @Entity
 @Data
+@XmlRootElement
 @Table(name = "shain")
 public class Shain {
 

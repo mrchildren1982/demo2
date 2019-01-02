@@ -10,6 +10,7 @@ public class FamilyDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 家族ID */
 	private Integer familyId;
 
 	private ParentDto husband;

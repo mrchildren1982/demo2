@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>top page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style>
+h1 {
+	font-size: 18pt;
+	font-weight: bold;
+	color: gray;
+}
+
+body {
+	font-size: 13pt;
+	color: gray;
+	margin: 5px, 25px;
+}
+
+tr {
+	margin: 5px;
+}
+
+th {
+	padding: 5px;
+	color: white;
+	background: darkgray;
+}
+
+td {
+	padding: 5px;
+	color: black;
+	background: #f0f0f0;
+}
+
+.err {
+	color: red;
+}
+</style>
+</head>
+<body>
+	<h1 th:text="#{content.title}">Hello page</h1>
+	<p th:text="${msg}"></p>
+	<form method="post" action="/" th:object="${formModel}">
+		<ul>
+			<li th:each="error :${#fields.detailedErrors()}"
+			class="err" th:text="${error.message}"/>
+		</ul>
+		<table>
+			<tr>
+				<td><label for="name">名前</label></td>
+				<td><input type="text" name="name" th:value="*{name}" /></td>
+			</tr>
+			<tr>
+				<td><label for="age">年齢</label></td>
+				<td><input type="text" name="age" th:value="*{age}" /></td>
+			</tr>
+			<tr>
+				<td><label for="mail">メールアドレス</label></td>
+				<td><input type="text" name="mail" th:value="*{mail}" /></td>
+			</tr>
+			<tr>
+				<td><label for="mail">メモ</label></td>
+				<td><textarea name="memo" th:value="*{memo}" cols="20" rows="5"></textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="submit" /></td>
+			</tr>
+		</table>
+	</form>
+
+	<hr />
+	<table>
+		<tr>
+			<th>ID</th>
+			<th>名前</th>
+		</tr>
+		<tr th:each="obj : ${datalist}">
+			<td th:text="${obj.id}"></td>
+			<td th:text="${obj.name}"></td>
+		</tr>
+	</table>
+
+</body>
+</html>
