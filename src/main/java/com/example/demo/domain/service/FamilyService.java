@@ -22,6 +22,11 @@ import com.example.demo.domain.repository.ParentRepository;
 import com.example.demo.exception.BusinessException;
 import com.example.demo.exception.DataNotFoundException;
 
+/**
+ *
+ * @author tbk40
+ *
+ */
 @Transactional
 @Service
 public class FamilyService {
@@ -37,12 +42,18 @@ public class FamilyService {
 	@Autowired
 	private ChildRepository childRepository;
 
-	public List<FamilyDto> getFamilyData() throws BusinessException{
+	/**
+	 * ParentテーブルとChildテーブルを全件検索する
+	 *
+	 * @return
+	 * @throws BusinessException
+	 */
+	public List<FamilyDto> getFamilyData() throws BusinessException {
 
 		List<Parent> parents = parentRepository.findAll();
 
-		if (parents == null  || parents.size() == 0) {
-			String message =messageSource.getMessage("data_not_found",null , Locale.JAPAN);
+		if (parents == null || parents.size() == 0) {
+			String message = messageSource.getMessage("data_not_found", null, Locale.JAPAN);
 			logger.debug(message);
 			throw new DataNotFoundException(message);
 		}
@@ -51,9 +62,9 @@ public class FamilyService {
 		List<FamilyDto> familys = new ArrayList<>();
 
 		List<Integer> allFamilyIds = new ArrayList<>();
-		for(Parent parent : parents) {
+		for (Parent parent : parents) {
 
-			if(!isContains(parent.getFamilyId(),allFamilyIds)) {
+			if (!isContains(parent.getFamilyId(), allFamilyIds)) {
 				allFamilyIds.add(parent.getFamilyId());
 
 			}
@@ -65,7 +76,7 @@ public class FamilyService {
 			familys.add(dto);
 		}
 
-		for(Parent parent : parents) {
+		for (Parent parent : parents) {
 
 			for (FamilyDto family : familys) {
 
@@ -82,7 +93,7 @@ public class FamilyService {
 			}
 		}
 
-		for(Child child : childrens) {
+		for (Child child : childrens) {
 
 			for (FamilyDto family : familys) {
 
@@ -102,6 +113,42 @@ public class FamilyService {
 		}
 
 		return familys;
+	}
+
+	/**
+	 * リクエストボディのファミリー情報より、ParentテーブルとChildテーブルのレコードを
+	 * 更新する
+	 *
+	 * @param family
+	 * @return
+	 */
+	public FamilyDto insert(FamilyDto family, Integer familyId) {
+
+		ParentDto husband = family.getHusband();
+
+		ParentDto wife = family.getWife();
+
+		List<ChildDto> children = family.getChildren();
+
+		Parent tHusband = new Parent();
+		Parent tWife = new Parent();
+
+		BeanUtils.copyProperties(husband, tHusband);
+		BeanUtils.copyProperties(wife, tWife);
+
+		parentRepository.saveAndFlush(tHusband);
+		parentRepository.saveAndFlush(tWife);
+
+		for (ChildDto elem : children) {
+
+			Child entity = new Child();
+			BeanUtils.copyProperties(elem, entity);
+
+			childRepository.saveAndFlush(entity);
+		}
+
+		return family;
+
 	}
 
 	private boolean isContains(Integer id, List<Integer> ids) {

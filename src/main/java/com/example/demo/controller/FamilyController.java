@@ -12,7 +12,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -41,6 +44,14 @@ public class FamilyController {
 		return ResponseEntity.ok(familys);
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(method = RequestMethod.POST, value = "{familyId}")
+	public ResponseEntity<FamilyDto> insertFamily(@RequestBody @Validated FamilyDto family,@PathVariable("familyId") Integer familyId ) {
+
+		FamilyDto familyDto = familyService.insert(family, familyId);
+		return ResponseEntity.ok(familyDto);
+	}
+
 	@ExceptionHandler(DataNotFoundException.class)
 	public ResponseEntity<?> handleException(DataNotFoundException ex) {
 
@@ -56,4 +67,6 @@ public class FamilyController {
 		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 		return new ResponseEntity<>(body, headers, httpStatus);
 	}
+
+
 }
