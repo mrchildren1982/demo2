@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>top page</title>
+<style>
+h1 {
+	font-size: 18pt;
+	font-weight: bold;
+	color: gray;
+}
+
+body {
+	font-size: 13pt;
+	color: gray;
+	margin: 5px, 25px;
+}
+
+tr {
+	margin: 5px;
+}
+
+th {
+	padding: 5px;
+	color: white;
+	background: darkgray;
+}
+
+td {
+	padding: 5px;
+	color: black;
+	background: #f0f0f0;
+}
+
+.err {
+	color: red;
+}
+</style>
+</head>
+<body>
+	<h1 th:text="#{content.title}"></h1>
+	<p th:utext="${msg}"></p>
+<!-- 選択オブジェクトへの変数式 -->
+	<table th:object="${hanako}">
+		<tr>
+			<th>ID</th>
+			<td th:text="*{id}"></td>
+		</tr>
+		<tr>
+			<th>NAME</th>
+			<td th:text="*{name}"></td>
+		</tr>
+		<tr>
+			<th>MAIL</th>
+			<td th:text="*{email}"></td>
+		</tr>
+	</table>
+
+	<div th:object="${hanako}">
+	<!-- リテラル置換 -->
+		<p th:text="|my name is *{name}. mail address is *{email}.|">message</p>
+	</div>
+</body>
+</html>

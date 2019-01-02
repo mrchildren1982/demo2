@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>top page</title>
+<style>
+h1 {
+	font-size: 18pt;
+	font-weight: bold;
+	color: gray;
+}
+
+body {
+	font-size: 13pt;
+	color: gray;
+	margin: 5px, 25px;
+}
+
+tr {
+	margin: 5px;
+}
+
+th {
+	padding: 5px;
+	color: white;
+	background: darkgray;
+}
+
+td {
+	padding: 5px;
+	color: black;
+	background: #f0f0f0;
+}
+
+.err {
+	color: red;
+}
+</style>
+</head>
+<body>
+	<h1 th:text="#{content.title}"></h1>
+	<p th:text="#{content.message}"></p>
+<!-- ユーティリティオブジェクト -->
+	<p
+		th:text="${#dates.format(new java.util.Date(),'dd/MMM/yyyy HH:mm:ss')}"></p>
+	<p th:text="${#numbers.formatInteger(11234,7)}"></p>
+	<p th:text="${#strings.toUpperCase('Welcome to Spring.')}"></p>
+
+	<p th:text="'id: ' + ${param.id[0]}"></p>
+	<p th:text="'name ' + ${param.name[0]}"></p>
+	<p th:text="'one ' + 'two ' + 'three'"></p>
+
+	<p><a th:href="@{'/hello/utility/' + ${param.id[0]}}">link</a></p>
+</body>
+</html>
