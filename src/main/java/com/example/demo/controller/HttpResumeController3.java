@@ -55,7 +55,7 @@ public class HttpResumeController3 {
 			@RequestHeader("sessionId") @NotEmpty String sessionId,
 			@RequestHeader("Range") @NotEmpty @Pattern(regexp = "^bytes=(\\d)*-(\\d)*(,(\\d)*-(\\d)*)*$") @NotEmpty String rangeHeader,
 			@RequestHeader("proxyFlag") @NotEmpty String proxyFlag,
-			@RequestHeader("argorithm") @Max(2) @Min(1)Integer argorithm) throws IOException {
+			@RequestHeader("argorithm") @Max(3) @Min(1)Integer argorithm) throws IOException {
 		// ファイル読み込み
 		File file = null;
 		try {
@@ -93,7 +93,7 @@ public class HttpResumeController3 {
 		OutputStream output = null;
 
 		try {
-			input = new RandomAccessFile(file, "r");
+			input = new RandomAccessFile(file, "rw");
 			output = response.getOutputStream();
 
 			if (ranges.isEmpty() || ranges.get(0) == full) {
@@ -103,8 +103,10 @@ public class HttpResumeController3 {
 				response.setHeader("Content-Length", String.valueOf(r.length));
 				if (argorithm == 1) {
 					FileOperationUtils.copy(input, output, r.start, r.length);
-				} else {
+				} else if (argorithm == 2) {
 					FileOperationUtils.copyFast(input, output, r.start, r.length);
+				} else {
+					FileOperationUtils.copy2(input, output, r.start,r.length);
 				}
 
 				// TODO
@@ -119,9 +121,11 @@ public class HttpResumeController3 {
 				response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 				// TODO
 				if (argorithm == 1) {
-					FileOperationUtils.copy(input, output, r.start, r.end);
+					FileOperationUtils.copy(input, output, r.start, r.length);
+				} else if (argorithm == 2){
+					FileOperationUtils.copyFast(input, output, r.start, r.length);
 				} else {
-					FileOperationUtils.copyFast(input, output, r.start, r.end);
+					FileOperationUtils.copy2(input , output, r.start,r.length);
 				}
 
 //				copyFirstVersion(input, output, r.start, r.end);
@@ -145,8 +149,10 @@ public class HttpResumeController3 {
 					// //TODO
 					if (argorithm == 1) {
 						FileOperationUtils.copy(input, output, r.start, r.length);
-					} else {
+					} else if (argorithm == 2){
 						FileOperationUtils.copyFast(input, output, r.start, r.length);
+					} else {
+						FileOperationUtils.copy2(input, output, r.start, r.length);
 					}
 
 //					copyFirstVersion(input, output, r.start, r.length);
