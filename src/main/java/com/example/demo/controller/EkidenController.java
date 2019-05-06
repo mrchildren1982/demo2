@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -98,83 +99,93 @@ public class EkidenController {
 		}
 
 		//チャンク形式でデータを送信
-		StreamingResponseBody responseBody = outputStream -> {
-			Console.println("Start Async processing");
+		StreamingResponseBody responseBody = null;
+		try {
+			responseBody = outputStream -> {
+				Console.println("Start Async processing");
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-			String json = objectMapper.writeValueAsString(results);
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+				String json = objectMapper.writeValueAsString(results);
 
-			// TODO オブジェクトを
-			for (int off = 0; off < json.getBytes().length; off += chunckSize) {
-				// バイト単位で切り出し
-				int chunckSizeTrans = chunckSize;
+				// TODO オブジェクトをJSON（文字列)に変換して、レスポンスに書き出す
+				for (int off = 0; off < json.getBytes().length; off += chunckSize) {
+					// バイト単位で切り出し
+					int chunckSizeTrans = chunckSize;
 
-				if (off + chunckSize > json.getBytes().length) {
-					chunckSizeTrans = json.getBytes().length - off;
+					if (off + chunckSize > json.getBytes().length) {
+						chunckSizeTrans = json.getBytes().length - off;
+					}
+					//json文字列をバイト単位で切り出す
+					String jsonByte = new String(json.getBytes("UTF-8"), off, chunckSizeTrans, "UTF-8");
+					outputStream.write(String.valueOf(chunckSize).getBytes());
+					outputStream.write("\r\n".getBytes());
+					outputStream.write(jsonByte.getBytes());
+					// outputStream.write(json.getBytes());
+					outputStream.write("\r\n".getBytes());
+					outputStream.flush();
 				}
-				String jsonByte = new String(json.getBytes("UTF-8"), off, chunckSizeTrans, "UTF-8");
-				outputStream.write(String.valueOf(chunckSize).getBytes());
-				outputStream.write("\r\n".getBytes());
-				outputStream.write(jsonByte.getBytes());
-				// outputStream.write(json.getBytes());
-				outputStream.write("\r\n".getBytes());
-				outputStream.flush();
-			}
-			// 最後は空のチャンクを転送する。
-			outputStream.write(String.valueOf("0").getBytes());
+				// 最後は空のチャンクを転送する。
+				outputStream.write(String.valueOf("0").getBytes());
+				outputStream.write("".getBytes());
 
-		};
+			};
+		} catch (Exception e) {
+			// TODO 自動生成された catch ブロック
+			logger.error("INTERNAL SERVER ERROR");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 		// ヘッダの設定
 		// 戻り値がStreamingResponseBodyの場合は、ヘッダを設定できないため、戻り値をResponseEntity<StreamingResponseBody>にした
 		HttpHeaders headers = new HttpHeaders();
 		// headers.set("Content-Type", "application/json");
+		//テスト用のヘッダ
 		headers.set("Test-header", "test");
 		return new ResponseEntity<StreamingResponseBody>(responseBody, headers, HttpStatus.OK);
 	}
 
-//	@RequestMapping(method = RequestMethod.GET, path = "/direct")
-//	public StreamingResponseBody directStreaming(@RequestParam(defaultValue = "1") long eventNumber,
-//			@RequestParam(defaultValue = "0") long intervalSec, HttpServletResponse response) throws IOException {
-//
-//		// StreamingResponseBodyのwriteToメソッドの中に非同期処理を実装する
-//		// StreamingResponseBoydは関数型インタフェースなので、ラムダ式が使える
-//		StreamingResponseBody responseBody = outputStream -> {
-//			Console.println("Start Async processing");
-//
-//			if (intervalSec == 999) {
-//				throw new IllegalStateException("Special parameter for confirm error.");
-//			}
-//
-//			List<EkidenMembers> results = ekidenService.getAllMembers();
-//			if (results.size() == 0) {
-//
-//				response.setStatus(HttpStatus.NOT_FOUND.value());
-//			}
-//
-//			for (long i = 1; i <= eventNumber; i++) {
-//
-//				try {
-//					TimeUnit.SECONDS.sleep(intervalSec);
-//				} catch (InterruptedException e) {
-//					Thread.interrupted();
-//				}
-//				// outputStream.write(("msg" + i + "\r\n").getBytes());
-//
-//				for (EkidenMembers member : results) {
-//					outputStream.write(member.toString().length());
-//					outputStream.write(member.toString().getBytes());
-//					outputStream.write("\r\n".getBytes());
-//				}
-//				outputStream.flush();
-//			}
-//			Console.println("End Async processing");
-//
-//		};
-//
-//		Console.println("End get.");
-//		return responseBody;
-//	}
+	//	@RequestMapping(method = RequestMethod.GET, path = "/direct")
+	//	public StreamingResponseBody directStreaming(@RequestParam(defaultValue = "1") long eventNumber,
+	//			@RequestParam(defaultValue = "0") long intervalSec, HttpServletResponse response) throws IOException {
+	//
+	//		// StreamingResponseBodyのwriteToメソッドの中に非同期処理を実装する
+	//		// StreamingResponseBoydは関数型インタフェースなので、ラムダ式が使える
+	//		StreamingResponseBody responseBody = outputStream -> {
+	//			Console.println("Start Async processing");
+	//
+	//			if (intervalSec == 999) {
+	//				throw new IllegalStateException("Special parameter for confirm error.");
+	//			}
+	//
+	//			List<EkidenMembers> results = ekidenService.getAllMembers();
+	//			if (results.size() == 0) {
+	//
+	//				response.setStatus(HttpStatus.NOT_FOUND.value());
+	//			}
+	//
+	//			for (long i = 1; i <= eventNumber; i++) {
+	//
+	//				try {
+	//					TimeUnit.SECONDS.sleep(intervalSec);
+	//				} catch (InterruptedException e) {
+	//					Thread.interrupted();
+	//				}
+	//				// outputStream.write(("msg" + i + "\r\n").getBytes());
+	//
+	//				for (EkidenMembers member : results) {
+	//					outputStream.write(member.toString().length());
+	//					outputStream.write(member.toString().getBytes());
+	//					outputStream.write("\r\n".getBytes());
+	//				}
+	//				outputStream.flush();
+	//			}
+	//			Console.println("End Async processing");
+	//
+	//		};
+	//
+	//		Console.println("End get.");
+	//		return responseBody;
+	//	}
 
 	/**
 	 * チャンク転送実装例　ファイル読み込みバージョン
@@ -296,8 +307,7 @@ public class EkidenController {
 	@GetMapping("/members-order")
 	public ResponseEntity<EkidenDto> getAll() throws IOException {
 
-		List<EkidenMembers> ekidenMembers = null;
-		// = ekidenService.getAllMembers();
+		List<EkidenMembers> ekidenMembers = ekidenService.getAllMembers();
 		if (ekidenMembers.size() == 0) {
 
 			logger.debug(NOT_FOUND);
@@ -367,6 +377,32 @@ public class EkidenController {
 		} else {
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(insertResult);
+		}
+
+	}
+
+	/**
+	 * 駅伝の走順を更新する
+	 *
+	 * @param ekidenDto
+	 * @param bindingResult
+	 * @return
+	 */
+	@PutMapping
+	public ResponseEntity<EkidenDto> updateOrder(@RequestBody EkidenDto ekidenDto, BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+
+			return ResponseEntity.badRequest().build();
+		}
+
+		EkidenDto updateResult = ekidenService.updateOrder(ekidenDto);
+		if (updateResult == null) {
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		} else {
+
+			return ResponseEntity.ok(updateResult);
 		}
 
 	}

@@ -52,7 +52,7 @@ public class EkidenService {
 
 	public void operationCheckSqlFile() {
 
-		List<Integer> ids = Arrays.asList(1,3);
+		List<Integer> ids = Arrays.asList(1, 3);
 
 		System.out.println("引数がリストのテスト");
 		List<TEkidenMembers> members = ekidenRepository.selectEkidenMembersByIdList(ids);
@@ -90,7 +90,6 @@ public class EkidenService {
 			members.add(member);
 		}
 
-
 		for (EkidenMembers m : members) {
 
 			emitter.send(m);
@@ -98,7 +97,6 @@ public class EkidenService {
 		emitter.complete();
 		return members;
 	}
-
 
 	/**
 	 * 駅伝メンバーテーブルのレコード全件検索
@@ -197,7 +195,7 @@ public class EkidenService {
 			for (TEkidenOrder record : beforeInsert) {
 
 				int deleteResult = ekidenOrderDao.delete(record);
-				if(deleteResult == 0) {
+				if (deleteResult == 0) {
 
 					logger.debug("削除に失敗しました");
 					return null;
@@ -261,5 +259,43 @@ public class EkidenService {
 
 		return orders;
 
+	}
+
+	/**
+	 * 駅伝オーダーテーブルのレコードを更新する。
+	 * @param ekidenDto
+	 * @return 更新結果
+	 *
+	 */
+	public EkidenDto updateOrder(EkidenDto ekidenDto) {
+
+		List<EkidenOrder> orders = ekidenDto.getOrders();
+
+		List<TEkidenOrder> entities = new ArrayList<>();
+		for (EkidenOrder order : orders) {
+
+			TEkidenOrder entity = new TEkidenOrder();
+			BeanUtils.copyProperties(order, entity);
+			entities.add(entity);
+			int result  = ekidenOrderDao.update(entity);
+			if (result == 0) {
+				logger.debug("駅伝オーダーテーブルのレコード更新に失敗しました");
+				return null;
+			}
+		}
+
+		List<EkidenOrder> retOrders = new ArrayList<>();
+		for (TEkidenOrder entity : entities) {
+
+			EkidenOrder ekidenOrder = new EkidenOrder();
+
+			BeanUtils.copyProperties(entity, ekidenOrder);
+			retOrders.add(ekidenOrder);
+
+		}
+
+		ekidenDto.setOrders(retOrders);
+
+		return ekidenDto;
 	}
 }
