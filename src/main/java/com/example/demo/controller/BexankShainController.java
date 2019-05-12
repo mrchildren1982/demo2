@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.annotations.common.util.impl.LoggerFactory;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.domain.entity.BexankShain;
 import com.example.demo.domain.service.BexankShainService;
 import com.example.demo.exception.BusinessException;
+import com.example.demo.validator.BexankShainValidator;
 
 @RestController
 @RequestMapping("/bexankShain")
@@ -32,12 +35,19 @@ public class BexankShainController {
 	@Autowired
 	private BexankShainService service;
 
-	@RequestMapping(method = RequestMethod.GET, value = "{id}")
-	public BexankShain getShain(@PathVariable("id") Long id, BindingResult result) throws BusinessException {
+	@Autowired
+	@URL
+	private BexankShainValidator validator;
 
-		if (result.hasErrors()) {
-			return null;
-		}
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.addValidators(validator);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "{id}")
+	public BexankShain getShain(@PathVariable(name ="id", required  = false) Long id) throws BusinessException {
+
+
 		BexankShain bexankShain = service.getById(id);
 
 		return bexankShain;

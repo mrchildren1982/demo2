@@ -5,11 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-
 
 /**
  * ★ポイント1
@@ -45,6 +45,16 @@ public class LargeFileStreamingResponseBody implements StreamingResponseBody {
 		this.filePath = filePath;
 	}
 
+	private void hoge() {
+
+		LocalDateTime now  = LocalDateTime.now();
+
+		LocalDateTime oneYearAfter = now.plusYears(1);
+
+		LocalDateTime oneYearAndTwoMonthAfter = oneYearAfter.plusMonths(2);
+
+	}
+
 	/**
 	 * ★ポイント4
 	 * このメソッドの処理がHTTPリクエストを受け付けるスレッドとは別に非同期で実行される
@@ -69,6 +79,5 @@ public class LargeFileStreamingResponseBody implements StreamingResponseBody {
 		}
 
 	}
-
 
 }

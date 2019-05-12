@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +32,7 @@ public class LargeFileDownloadController {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	@Value("${app.sample.fileInfo:C:/temp/download/fileInfo.json}")
+//	@Value("${app.sample.fileInfo:C:/temp/download/fileInfo.json}")
 	private File downloadFileInfo;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/get")
@@ -78,24 +77,24 @@ public class LargeFileDownloadController {
 
 	private FileInfo getDownloadFile() {
 
-		//		try {
-		//			downloadFileInfo = loadFile("files/fileInfo.json");
-		//		} catch (BusinessException e1) {
-		//			logger.error(e1.getMessage());
-		//		}
+				try {
+					downloadFileInfo = loadFile("files/fileInfo.json");
+				} catch (BusinessException e1) {
+					logger.error(e1.getMessage());
+				}
 
-		String json = "{\r\n" +
-				"    \"filePath\": \"C:\\\\temp\\\\download\\\\markdowndemo.md\",\r\n" +
-				"    \"contentType\": \"application/zip\",\r\n" +
-				"    \"checkSum\": \"3f31020b65ffc7b230cfb3d4f87a792000f41784\",\r\n" +
-				"    \"downloadFileName\": \"markdowndemo.md\",\r\n" +
-				"    \"contentLength\": 118065523\r\n" +
-				"}";
+//		String json = "{\r\n" +
+//				"    \"filePath\": \"C:\\\\temp\\\\download\\\\markdowndemo.md\",\r\n" +
+//				"    \"contentType\": \"application/zip\",\r\n" +
+//				"    \"checkSum\": \"3f31020b65ffc7b230cfb3d4f87a792000f41784\",\r\n" +
+//				"    \"downloadFileName\": \"markdowndemo.md\",\r\n" +
+//				"    \"contentLength\": 118065523\r\n" +
+//				"}";
 
 		FileInfo fileInfo = null;
 		try {
 			//			fileInfo = objectMapper.readValue(downloadFileInfo, FileInfo.class);
-			fileInfo = objectMapper.readValue(json, FileInfo.class);
+			fileInfo = objectMapper.readValue(downloadFileInfo, FileInfo.class);
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}

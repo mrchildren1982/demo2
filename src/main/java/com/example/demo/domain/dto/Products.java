@@ -1,25 +1,18 @@
 package com.example.demo.domain.dto;
 
-
-import javax.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttachmentDto {
+@Data
+public class Products {
 
-	@NotNull
 	private Integer id;
 
-	private String belonging;
+	private String name;
 
+	private String category;
 
 }

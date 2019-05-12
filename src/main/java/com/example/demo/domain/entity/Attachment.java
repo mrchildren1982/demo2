@@ -5,9 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "attachment")
 public class Attachment {
@@ -21,31 +25,6 @@ public class Attachment {
 
 	@Column(name = "work")
 	private String work;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getBelonging() {
-		return belonging;
-	}
-
-	public void setBelonging(String belonging) {
-		this.belonging = belonging;
-	}
-
-	public String getWork() {
-		return work;
-	}
-
-	public void setWork(String work) {
-		this.work = work;
-	}
-
 
 
 }
