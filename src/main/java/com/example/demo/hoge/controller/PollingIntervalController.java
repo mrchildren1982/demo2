@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import com.example.demo.exception.BusinessException;
-import com.example.demo.hoge.domain.dto.LargeFileStreamingReponseBody;
+import com.example.demo.hoge.domain.dto.LargeFileStreamingResponseBody;
 import com.example.demo.hoge.domain.dto.PollingIntervals;
 import com.example.demo.hoge.domain.service.PollingIntervalService;
 
@@ -51,7 +51,7 @@ public class PollingIntervalController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 
-		LargeFileStreamingReponseBody largeFile = new LargeFileStreamingReponseBody(pollngIntervals, chunckSize);
+		LargeFileStreamingResponseBody largeFile = new LargeFileStreamingResponseBody(pollngIntervals, chunckSize);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		return new ResponseEntity<StreamingResponseBody>(

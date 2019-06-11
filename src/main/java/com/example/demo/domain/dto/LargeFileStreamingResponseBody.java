@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,16 +42,6 @@ public class LargeFileStreamingResponseBody implements StreamingResponseBody {
 
 	public LargeFileStreamingResponseBody(String filePath) {
 		this.filePath = filePath;
-	}
-
-	private void hoge() {
-
-		LocalDateTime now  = LocalDateTime.now();
-
-		LocalDateTime oneYearAfter = now.plusYears(1);
-
-		LocalDateTime oneYearAndTwoMonthAfter = oneYearAfter.plusMonths(2);
-
 	}
 
 	/**

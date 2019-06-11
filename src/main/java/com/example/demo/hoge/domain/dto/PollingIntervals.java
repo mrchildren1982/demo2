@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
-public class PollingIntervals extends LargeFileStreamingReponseBody{
+public class PollingIntervals extends LargeFileStreamingResponseBody{
 
 
 	private List<PollingInterval> pollingIntervals;

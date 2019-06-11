@@ -1,0 +1,3 @@
+select
+/*%expand*/*
+from history

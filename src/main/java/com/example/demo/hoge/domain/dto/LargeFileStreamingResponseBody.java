@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import com.example.demo.domain.dto.LargeFileStreamingResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -17,7 +16,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * @author 雅幸
  *
  */
-public class LargeFileStreamingReponseBody implements StreamingResponseBody {
+public class LargeFileStreamingResponseBody implements StreamingResponseBody {
 
 	/** 改行コード(Carriage Reteturn Line Feed) */
 	private static final String CRLF = "\r\n";
@@ -34,11 +33,11 @@ public class LargeFileStreamingReponseBody implements StreamingResponseBody {
 	/** チャンクサイズ */
 	private Integer chunckSize;
 
-	public LargeFileStreamingReponseBody() {
+	public LargeFileStreamingResponseBody() {
 
 	}
 
-	public LargeFileStreamingReponseBody(Object resource, Integer chunckSize) {
+	public LargeFileStreamingResponseBody(Object resource, Integer chunckSize) {
 
 		this.resource = resource;
 		this.chunckSize = chunckSize;
