@@ -6,6 +6,7 @@ import com.example.demo.utils.Order;
 
 public class OrderTest {
 
+  @Test
   public void 黒明細のみの合計金額を求める() throws Exception {
 
     int[][] values = {{100, 8}, {200, 5}, {300, 3}};
