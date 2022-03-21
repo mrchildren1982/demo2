@@ -16,6 +16,7 @@ public class OrderTest {
     assertEquals(expected, actual);
   }
 
+
   @Test
   public void 赤明細を含む合計金額を求める() throws Exception {
 
