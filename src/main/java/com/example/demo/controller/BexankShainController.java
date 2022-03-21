@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +30,6 @@ import com.example.demo.validator.BexankShainValidator;
 @RequestMapping("/bexankShain")
 public class BexankShainController {
 
-	private static final org.jboss.logging.Logger logger = LoggerFactory.logger(BexankShainController.class);
-
 	@Autowired
 	private BexankShainService service;
 
@@ -53,6 +51,7 @@ public class BexankShainController {
 		return bexankShain;
 	}
 
+
 	@RequestMapping(method = RequestMethod.GET)
 	public List<BexankShain> getAllShains() {
 		return service.selectAll();
@@ -64,7 +63,7 @@ public class BexankShainController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, path = "/insertAll")
-	public BexankShain insertShain(@Validated @RequestBody BexankShain shain) {
+	public BexankShain insertShain(@Validated @RequestBody BexankShain shain) throws IOException {
 
 		return service.insertShain(shain);
 	}

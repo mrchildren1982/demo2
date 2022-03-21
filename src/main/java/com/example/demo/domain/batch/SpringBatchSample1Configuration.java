@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -15,29 +14,29 @@ import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Sort.Direction;
 
 import com.example.demo.domain.entity.LargeItemEntity;
 import com.example.demo.domain.entity.SourceItemEntity;
 import com.example.demo.domain.entity.TargetItemEntity;
+import com.example.demo.domain.repository.LargeItemRepository;
 import com.example.demo.domain.repository.LargeItemRepositoryImpl;
 import com.example.demo.domain.repository.SourceItemRepository;
 import com.example.demo.domain.repository.SourceItemRepositoryImpl;
 import com.example.demo.domain.repository.TargetItemRepository;
 import com.example.demo.domain.repository.TargetItemRepositoryImpl;
 
-@Configuration
-@EnableBatchProcessing
+//@Configuration
+//@EnableBatchProcessing
 public class SpringBatchSample1Configuration {
-//	@Autowired
-//	private SourceItemRepository sourceItemRepository;
+	@Autowired
+	private SourceItemRepository sourceItemRepository;
 
-//	@Autowired
-//	private TargetItemRepository targetItemRepository;
+	@Autowired
+	private TargetItemRepository targetItemRepository;
 
-//	@Autowired
-//	private LargeItemRepository largeItemRepository;
+	@Autowired
+	private LargeItemRepository largeItemRepository;
 
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
@@ -56,7 +55,6 @@ public class SpringBatchSample1Configuration {
 
 		return new TargetItemRepositoryImpl();
 	}
-
 
 	@Bean
 	public LargeItemRepositoryImpl largeItemRepositoryImpl() {
@@ -140,7 +138,7 @@ public class SpringBatchSample1Configuration {
 	@Bean
 	public Job sampleBatch1Job() {
 
-		return jobBuilderFactory.get("sampleBatch1Job")
+		return jobBuilderFactory.get("sampleBat ch1Job")
 				.incrementer(new RunIdIncrementer())
 				.flow(sampleBatch1Step1())
 				.next(sampleBatch1Step2())
